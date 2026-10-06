@@ -43,10 +43,8 @@ def testfunc():
         np.clip(blurred_image * 255, 0, 255).astype(np.uint8)
     ).show()
 
+    #SEPIA
     
-    # =========================
-    # Sepia
-    # =========================
     sepia_filter = Sepia()
     sepia_image = sepia_filter.apply(image)
 
@@ -60,4 +58,3 @@ def testfunc():
     ).show()
 
 testfunc()
-
