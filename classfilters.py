@@ -34,7 +34,7 @@ class Sepia(Filter):
         [0.272, 0.534, 0.131],  # nouveau bleu
         ])
         new =image@matrice 
-        return matrice 
+        return new  
 
         
 
