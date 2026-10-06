@@ -2,4 +2,49 @@ from classabstraite import *
 import numpy as np
 class DifferenceBlend(Blend):
     def apply(self,background,image,opacity):
-        return background-opacity*image
+        return np.abs(background-opacity*image)
+class DarkenBlend(Blend):
+    def apply(self,background,image,opacity):
+        return np.mean(background,image*opacity)
+class MultiplyBlend(Blend):
+    def apply(self,background,image,opacity):
+        return background*image*opacity
+class ColorBurnBlend(Blend):
+    def apply(self,background,image,opacity):
+        return 1-(1-background)/(image*opacity)
+class LinearBurn(Blend):
+    def apply(self,background,image,opacity):
+        return background+image*opacity-1
+class LigthenBlend(Blend):
+    def apply(self,background,image,opacity):
+        return np.max(background,image*opacity)
+class ScreenBlend(Blend):
+    def apply(self,background,image,opacity):
+        return 1-(1-background)*(1-image*opacity)
+class ColorDodgeBlend(Blend):
+    def apply(self,background,image,opacity):
+        return background/(1-image*opacity)
+class LinearDodgeBlend(Blend):
+    def apply(self,background,image,opacity):
+        return background+image*opacity
+class OverlayBlend(Blend):
+    def apply(self,background,image,opacity):
+        return np.where(background<0.5,2*background*image*opacity,1-2*(1-background)*(1-image*opacity))
+class SoftLightBlend(Blend):
+    def apply(self,background,image,opacity):
+        return (1-2*image*opacity)*background**2+2*image*opacity*background
+class HardLightBlend(Blend):
+    def apply(self,background,image,opacity):
+        return np.where(image*opacity<0.5,2*background*image*opacity,1-2*(1-background)*(1-image*opacity))
+class VividLightBlend(Blend):
+    def apply(self,background,image,opacity):
+        return np.where(image*opacity<0.5,1-(1-background)/(2*image*opacity),background/(2*(1-image*opacity)))
+class LinearLightBlend(Blend):
+    def apply(self,background,image,opacity):
+        return np.where(image*opacity<0.5,background+2*image*opacity-1,background+2*(image*opacity-0.5))
+class PinLightBlend(Blend):
+    def apply(self,background,image,opacity):
+        return np.where(image*opacity<0.5,np.min(background,2*image*opacity),np.max(background,2*(image*opacity-0.5)))
+class ExclusionBlend(Blend):
+    def apply(self,background,image,opacity):
+        return background+image*opacity-2*background*image*opacity
