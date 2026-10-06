@@ -33,8 +33,9 @@ class Sepia(Filter):
         [0.349, 0.686, 0.168],  # nouveau vert
         [0.272, 0.534, 0.131],  # nouveau bleu
         ])
+        new =image@matrice 
+        return matrice 
 
-        new =image.copy()
         
 
         
