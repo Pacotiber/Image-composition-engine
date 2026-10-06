@@ -1,0 +1,13 @@
+layers : 
+  - image : "0_image.jpg"
+    filters:
+    - name : greyscale
+    - name : gaussianblur 
+      params: 
+        window : 5
+        sigma : 2.0
+  - masque : "1_image.jpg"
+    filters:
+    - name : greyscale
+
+
