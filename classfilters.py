@@ -15,5 +15,29 @@ class Grayscale(Filter):
     def __init__(self):
         super().__init__("grayscale",{})
     def apply(self, image: np.ndarray):
-        pass
-       
+        R,G,B=image[:,:,0],image[:,:,1],image[:,:,2]
+        gray=0.299*R+0.587*G+0.114*B
+        new = image.copy()
+        new[:,:,0] = gray
+        new[:,:,1]=gray
+        new[:,:,2]=gray
+        return new
+
+class Sepia(Filter): 
+    def __init__(self):
+        super().__init__("greyscale",{})
+    def apply(image: np.ndarray) -> np.ndarray:
+        """Effet sépia : chaque nouvelle couleur est un mélange pondéré de R, G, B."""
+        matrice = np.array([
+        [0.393, 0.769, 0.189], # nouveau rouge
+        [0.349, 0.686, 0.168],  # nouveau vert
+        [0.272, 0.534, 0.131],  # nouveau bleu
+        ])
+
+        new =image.copy()
+        
+
+        
+        
+ 
+
