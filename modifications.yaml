@@ -11,7 +11,7 @@ layers:
       opacity: 0.5
   - image: 'C:\Users\Paco Tiberghien\iCloudDrive\Esilv\année 4\computerscience\Image-composition-engine\images\layers\2_wall.png'
     filters:
-      - name: greyscale
+      - name: normal 
     blend:
       name: difference
       opacity: 0.6

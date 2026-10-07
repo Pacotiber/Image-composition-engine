@@ -30,7 +30,6 @@ FILTRES = {
     "blur": blur,
     "gaussianblur": gaussianblur,
     "greyscale": Grayscale,
-    "grayscale": Grayscale,
     "sepia": Sepia,
 }
 
@@ -106,6 +105,3 @@ def show_from_array(arr: np.ndarray):
     img = array_to_img(arr)
     img.show()
                 
-a=readfromyaml("modifications.yaml")
-b=buildlayers(a)
-c=show_from_array(b)

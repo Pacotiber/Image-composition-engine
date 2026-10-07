@@ -5,8 +5,6 @@ paths = ["images/layers/0_picture","images/layers/1_picture","images/layers/2_pi
 
 
 def main():
-    for path in paths :
-        im = process_image(path)
-        im = apply_filters(im)
-
-    show_result(apply_all_modif(im))
+   a=readfromyaml("modifications.yaml")
+   b=buildlayers(a)
+   show_from_array(b)
