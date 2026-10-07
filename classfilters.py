@@ -2,13 +2,33 @@ import numpy as np
 from PIL import Image
 from classabstraite import Filter
 from scipy.ndimage import convolve
-
-class blur(Filter):
-    def __init__(self,taille:int):
-        super().__init__("blur",{"taille":taille})
+class normal(Filter):
+    def __init__(self):
+        super().__init__("normal",{})
     def apply(self, image: np.ndarray):
-        """Flou moyenneur : chaque pixel devient la moyenne de son voisinage taille x taille."""
-        noyau = np.ones((self.parameters["taille"], self.parameters["taille"])) / (self.parameters["taille"] * self.parameters["taille"])
+        return image
+class blur(Filter):
+    """Flou moyenneur (pas de params dans le YAML -> valeur par défaut)."""
+    def __init__(self, taille: int = 5):
+        super().__init__("blur", {"taille": taille})
+
+    def apply(self, image: np.ndarray):
+        t = self.parameters["taille"]
+        noyau = np.ones((t, t)) / (t * t)
+        return convolve(image, noyau[:, :, None], mode="nearest")
+class gaussianblur(Filter):
+    def __init__(self, window: int, sigma: float):
+        super().__init__("gaussianblur", {"window": window, "sigma": sigma})
+
+    def apply(self, image: np.ndarray):
+        """Flou gaussien : noyau window x window pondéré par une gaussienne d'écart-type sigma."""
+        window = self.parameters["window"]
+        sigma = self.parameters["sigma"]
+        ax = np.arange(window) - (window - 1) / 2
+        xx, yy = np.meshgrid(ax, ax)
+        noyau = np.exp(-(xx**2 + yy**2) / (2 * sigma**2))
+        noyau /= noyau.sum()  # normalisation : la somme vaut 1
+
         return convolve(image, noyau[:, :, None], mode="nearest")
     
 class Grayscale(Filter):
@@ -25,7 +45,7 @@ class Grayscale(Filter):
 
 class Sepia(Filter): 
     def __init__(self):
-        super().__init__("greyscale",{})
+        super().__init__("sepia",{})
     def apply(self,image: np.ndarray) -> np.ndarray:
         """Effet sépia : chaque nouvelle couleur est un mélange pondéré de R, G, B."""
         matrice = np.array([

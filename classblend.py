@@ -1,5 +1,9 @@
 from classabstraite import *
 import numpy as np
+
+class NormalBlend(Blend):
+    def apply(self,background,image,opacity):
+        return background+image*opacity
 class DifferenceBlend(Blend):
     def apply(self,background,image,opacity):
         return np.abs(background-opacity*image)

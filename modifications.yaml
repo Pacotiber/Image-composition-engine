@@ -1,13 +1,25 @@
-layers : 
-  - image : "0_image.jpg"
+layers:
+  - image: 'C:\Users\Paco Tiberghien\iCloudDrive\Esilv\année 4\computerscience\Image-composition-engine\images\layers\0_photo.jpg'
     filters:
-    - name : greyscale
-    - name : gaussianblur 
-      params: 
-        window : 5
-        sigma : 2.0
-  - masque : "1_image.jpg"
+      - name: gaussianblur
+        params:
+          window: 5
+          sigma: 2.0
+  - image: 'C:\Users\Paco Tiberghien\iCloudDrive\Esilv\année 4\computerscience\Image-composition-engine\images\layers\1_pop_bike.png'
     filters:
-    - name : greyscale
-
-
+      - name: normal
+    blend:
+      mode: multiply
+      opacity: 0.8
+  - image: 'C:\Users\Paco Tiberghien\iCloudDrive\Esilv\année 4\computerscience\Image-composition-engine\images\layers\2_wall.png'
+    filters:
+      - name: greyscale
+    blend:
+      mode: overlay
+      opacity: 0.6
+  - image: 'C:\Users\Paco Tiberghien\iCloudDrive\Esilv\année 4\computerscience\Image-composition-engine\images\layers\3_shiny_car.png'
+    filters:
+      - name: greyscale
+    blend:
+      mode: screen
+      opacity: 1.0
