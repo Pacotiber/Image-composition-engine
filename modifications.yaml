@@ -1,21 +1,21 @@
 layers:
-  - image: 'C:\Users\Paco Tiberghien\iCloudDrive\Esilv\année 4\computerscience\Image-composition-engine\images\layers\0_photo.jpg'
+  - image: 'images\layers\0_photo.jpg'
     filters:
       - name: gaussianblur
         params:
           window: 5
           sigma: 2.0
-  - image: 'C:\Users\Paco Tiberghien\iCloudDrive\Esilv\année 4\computerscience\Image-composition-engine\images\layers\1_pop_bike.png'
+  - image: 'images\layers\1_pop_bike.png'
     blend:
       name: darken
       opacity: 0.5
-  - image: 'C:\Users\Paco Tiberghien\iCloudDrive\Esilv\année 4\computerscience\Image-composition-engine\images\layers\2_wall.png'
+  - image: 'images\layers\2_wall.png'
     filters:
       - name: normal 
     blend:
       name: difference
       opacity: 0.6
-  - image: 'C:\Users\Paco Tiberghien\iCloudDrive\Esilv\année 4\computerscience\Image-composition-engine\images\layers\3_shiny_car.png'
+  - image: 'images\layers\3_shiny_car.png'
     filters:
       - name: greyscale
     blend:
