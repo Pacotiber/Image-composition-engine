@@ -70,10 +70,13 @@ def apply_filters(image: np.ndarray, filters: list[Filter]):
 def dicttolistfilters(filters: list[dict] | None) -> list[Filter]:
     """Transforme la liste 'filters' d'un calque du YAML en liste d'objets Filter."""
     listeoffilter: list[Filter] = []
-    for f in filters or []:                    
-        name = f["name"].strip().lower()
-        params = f.get("params") or {}          
-        listeoffilter.append(FILTRES[name](**params))
+    for f in filters or []:  
+        try:                 
+            name = f["name"].strip().lower()
+            params = f.get("params") or {}          
+            listeoffilter.append(FILTRES[name](**params))
+        except KeyError:
+            raise ValueError(f"Filtre inconnu : '{name}' (disponibles : {list(FILTRES)})")
     return listeoffilter
 
 
