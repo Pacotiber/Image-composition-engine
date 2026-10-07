@@ -31,6 +31,7 @@ FILTRES = {
     "gaussianblur": gaussianblur,
     "greyscale": Grayscale,
     "sepia": Sepia,
+    "blackborder": blackborder
 }
 
 def array_from_file_rgba(path: str) -> np.ndarray:

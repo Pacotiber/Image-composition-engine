@@ -2,6 +2,7 @@ import numpy as np
 from PIL import Image
 from classabstraite import Filter
 from scipy.ndimage import convolve
+
 class normal(Filter):
     def __init__(self):
         super().__init__("normal",{})
@@ -55,6 +56,17 @@ class Sepia(Filter):
         ])
         new =image @ matrice.T
         return np.clip(new,0,1) 
+class blackborder(Filter):
+    def __init__(self, border_size: int):
+        super().__init__("blackborder", {"border_size": border_size})
+
+    def apply(self, image: np.ndarray):
+        epaisseur = self.parameters["border_size"]
+        image[:epaisseur,:,:]=0
+        image[-epaisseur:,:,:]=0
+        image[:,:epaisseur,:]=0
+        image[:,-epaisseur:,:]=0
+        return  image
 
         
 

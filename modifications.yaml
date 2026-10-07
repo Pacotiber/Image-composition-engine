@@ -1,23 +1,20 @@
 layers:
   - image: 'images\layers\0_photo.jpg'
     filters:
-      - name: gaussianblur
+      - name: blackborder
         params:
-          window: 5
-          sigma: 2.0
+          border_size: 100
   - image: 'images\layers\1_pop_bike.png'
     blend:
-      name: darken
-      opacity: 0.5
+      name: normal
+      opacity: 1.0
   - image: 'images\layers\2_wall.png'
-    filters:
-      - name: normal 
     blend:
-      name: difference
-      opacity: 0.6
+      name: normal
+      opacity: 1.0
   - image: 'images\layers\3_shiny_car.png'
     filters:
-      - name: greyscale
+      - name: normal
     blend:
-      name: difference
+      name: normal
       opacity: 1.0
