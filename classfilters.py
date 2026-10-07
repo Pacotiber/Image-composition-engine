@@ -1,15 +1,18 @@
 import numpy as np
-from PIL import Image
 from classabstraite import Filter
 from scipy.ndimage import convolve
 
+
 class normal(Filter):
+    """Filtre neutre : renvoie l'image sans la modifier."""
     def __init__(self):
-        super().__init__("normal",{})
+        super().__init__("normal", {})
+
     def apply(self, image: np.ndarray):
         return image
+
 class blur(Filter):
-    """Flou moyenneur (pas de params dans le YAML -> valeur par défaut)."""
+    """Flou moyenneur : chaque pixel devient la moyenne de son voisinage taille x taille."""
     def __init__(self, taille: int = 5):
         super().__init__("blur", {"taille": taille})
 
@@ -17,60 +20,62 @@ class blur(Filter):
         t = self.parameters["taille"]
         noyau = np.ones((t, t)) / (t * t)
         return convolve(image, noyau[:, :, None], mode="nearest")
+
+
 class gaussianblur(Filter):
+    """Flou gaussien : les pixels proches du centre pèsent plus que les lointains (window = taille du noyau, sigma = force du flou)."""
     def __init__(self, window: int, sigma: float):
         super().__init__("gaussianblur", {"window": window, "sigma": sigma})
 
     def apply(self, image: np.ndarray):
-        """Flou gaussien : noyau window x window pondéré par une gaussienne d'écart-type sigma."""
         window = self.parameters["window"]
         sigma = self.parameters["sigma"]
         ax = np.arange(window) - (window - 1) / 2
         xx, yy = np.meshgrid(ax, ax)
         noyau = np.exp(-(xx**2 + yy**2) / (2 * sigma**2))
-        noyau /= noyau.sum()  # normalisation : la somme vaut 1
-
+        noyau /= noyau.sum()
         return convolve(image, noyau[:, :, None], mode="nearest")
-    
+
+
 class Grayscale(Filter):
+    """Niveaux de gris : chaque pixel prend sa luminance (0.299 R + 0.587 G + 0.114 B)."""
     def __init__(self):
-        super().__init__("grayscale",{})
+        super().__init__("grayscale", {})
+
     def apply(self, image: np.ndarray):
-        R,G,B=image[:,:,0],image[:,:,1],image[:,:,2]
-        gray=0.299*R+0.587*G+0.114*B
+        R, G, B = image[:, :, 0], image[:, :, 1], image[:, :, 2]
+        gray = 0.299 * R + 0.587 * G + 0.114 * B
         new = image.copy()
-        new[:,:,0] = gray
-        new[:,:,1]=gray
-        new[:,:,2]=gray
+        new[:, :, 0] = gray
+        new[:, :, 1] = gray
+        new[:, :, 2] = gray
         return new
 
-class Sepia(Filter): 
+
+class Sepia(Filter):
+    """Effet sépia : chaque nouvelle couleur est un mélange pondéré de R, G, B."""
     def __init__(self):
-        super().__init__("sepia",{})
-    def apply(self,image: np.ndarray) -> np.ndarray:
-        """Effet sépia : chaque nouvelle couleur est un mélange pondéré de R, G, B."""
+        super().__init__("sepia", {})
+
+    def apply(self, image: np.ndarray) -> np.ndarray:
         matrice = np.array([
-        [0.393, 0.769, 0.189], # nouveau rouge
-        [0.349, 0.686, 0.168],  # nouveau vert
-        [0.272, 0.534, 0.131],  # nouveau bleu
+            [0.393, 0.769, 0.189],
+            [0.349, 0.686, 0.168],
+            [0.272, 0.534, 0.131],
         ])
-        new =image @ matrice.T
-        return np.clip(new,0,1) 
+        new = image @ matrice.T
+        return np.clip(new, 0, 1)
+
+
 class blackborder(Filter):
+    """Cadre noir : met à 0 une bordure de border_size pixels sur les quatre côtés."""
     def __init__(self, border_size: int):
         super().__init__("blackborder", {"border_size": border_size})
 
     def apply(self, image: np.ndarray):
         epaisseur = self.parameters["border_size"]
-        image[:epaisseur,:,:]=0
-        image[-epaisseur:,:,:]=0
-        image[:,:epaisseur,:]=0
-        image[:,-epaisseur:,:]=0
-        return  image
-
-        
-
-        
-        
- 
-
+        image[:epaisseur, :, :] = 0
+        image[-epaisseur:, :, :] = 0
+        image[:, :epaisseur, :] = 0
+        image[:, -epaisseur:, :] = 0
+        return image
