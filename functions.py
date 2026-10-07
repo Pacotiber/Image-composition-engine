@@ -52,8 +52,9 @@ def buildlayers(content: dict) -> np.ndarray:
         for filtre in dicttolistfilters(layer.get("filters")):
             new_layer = filtre.apply(new_layer)
         blendingmode=layer.get("blend")
-        nameblend=blendingmode.get("name") if blendingmode else None
-        opacity=blendingmode.get("opacity") if blendingmode else 1.0
+        nameblend=blendingmode.get("name") if blendingmode and isinstance(blendingmode.get("name"),str) else None
+        opacity= blendingmode.get("opacity") if blendingmode and isinstance(blendingmode.get("opacity"),float) else 1.0
+        opacity = max(0, min(opacity, 1.0))
         finalimage = new_layer if finalimage is None else apply_blend(finalimage, new_layer, blendingmode)
 
     return np.clip(finalimage, 0, 1)
