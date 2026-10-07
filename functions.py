@@ -103,7 +103,7 @@ def apply_blend(background: np.ndarray, image: np.ndarray, blend: dict | None = 
     bg_rgb = background[..., :3]
     bg_a = background[..., 3:4]
     im_rgb= image[..., :3]
-    if(len(bg_rgb)==len(im_rgb)):
+    if(len(bg_rgb)!=len(im_rgb)):
         raise ValueError(f"Les dimensions du fond {bg_rgb.shape} et du calque {im_rgb.shape} ne correspondent pas.")
     calque_a =image[..., 3:4] #on recup la veleure de A pour le calque
     blende = np.clip(mode.apply(bg_rgb, im_rgb, 1.0), 0, 1)

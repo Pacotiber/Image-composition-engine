@@ -18,3 +18,11 @@ layers:
     blend:
       name: normal
       opacity: 1.0
+  - image: 'images\layers\4_romain.png'
+    filters:
+      - name: normal
+    blend:
+      name: normal
+      opacity: 0.6
+
+  
