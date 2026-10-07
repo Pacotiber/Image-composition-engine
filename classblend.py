@@ -3,13 +3,13 @@ import numpy as np
 
 class NormalBlend(Blend):
     def apply(self,background,image,opacity):
-        return background+image*opacity
+        return image
 class DifferenceBlend(Blend):
     def apply(self,background,image,opacity):
         return np.abs(background-opacity*image)
 class DarkenBlend(Blend):
     def apply(self,background,image,opacity):
-        return np.mean(background,image*opacity)
+        return np.minimum(background,image*opacity)
 class MultiplyBlend(Blend):
     def apply(self,background,image,opacity):
         return background*image*opacity
@@ -21,7 +21,7 @@ class LinearBurn(Blend):
         return background+image*opacity-1
 class LigthenBlend(Blend):
     def apply(self,background,image,opacity):
-        return np.max(background,image*opacity)
+        return np.maximum(background,image*opacity)
 class ScreenBlend(Blend):
     def apply(self,background,image,opacity):
         return 1-(1-background)*(1-image*opacity)

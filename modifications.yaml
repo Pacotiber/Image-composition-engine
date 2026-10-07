@@ -6,20 +6,18 @@ layers:
           window: 5
           sigma: 2.0
   - image: 'C:\Users\Paco Tiberghien\iCloudDrive\Esilv\année 4\computerscience\Image-composition-engine\images\layers\1_pop_bike.png'
-    filters:
-      - name: normal
     blend:
-      mode: multiply
-      opacity: 0.8
+      name: darken
+      opacity: 0.5
   - image: 'C:\Users\Paco Tiberghien\iCloudDrive\Esilv\année 4\computerscience\Image-composition-engine\images\layers\2_wall.png'
     filters:
       - name: greyscale
     blend:
-      mode: overlay
+      name: difference
       opacity: 0.6
   - image: 'C:\Users\Paco Tiberghien\iCloudDrive\Esilv\année 4\computerscience\Image-composition-engine\images\layers\3_shiny_car.png'
     filters:
       - name: greyscale
     blend:
-      mode: screen
+      name: difference
       opacity: 1.0

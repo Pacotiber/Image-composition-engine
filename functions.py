@@ -84,21 +84,19 @@ def getblendingmode(name: str) -> Blend:
 
 def apply_blend(background: np.ndarray, image: np.ndarray, blend: dict | None = None) -> np.ndarray:
     blend = blend or {}                                   # calque sans blend -> normal
-    name = blend.get("name", "normal")
-    opacity = float(blend.get("opacity", 1.0))
-    mode = getblendingmode(name)
+    name = blend.get("name","normal")
+    opacity =float(blend.get("opacity",1.0))
+    mode= getblendingmode(name)
+    bg_rgb = background[..., :3]
+    bg_a = background[..., 3:4]
+    im_rgb= image[..., :3]
+    calque_a =image[..., 3:4] #on recup la veleure de A pour le calque
+    blende = np.clip(mode.apply(bg_rgb, im_rgb, 1.0), 0, 1)
+    alpha = calque_a* opacity  # opacité du calque x alpha de l'image 
+    rgb = bg_rgb*(1 - alpha) +blende* alpha #moyenne pondérée entre le fond et le calque
+    out_a= alpha+ bg_a *(1 -alpha)
+    return np.concatenate([rgb, out_a], axis=-1) #on recole les caunaux r,g,b,a
 
-    # Le blend se calcule sur RGB uniquement (alpha à part)
-    bg_rgb, bg_a = background[..., :3], background[..., 3:4]
-    im_rgb, im_a = image[..., :3], image[..., 3:4]
-
-    # Formule pure (opacité 1.0), puis interpolation avec le fond
-    blended = np.clip(mode.apply(bg_rgb, im_rgb, 1.0), 0, 1)
-    alpha = im_a * opacity                                # opacité du calque x alpha du PNG
-    rgb = bg_rgb * (1 - alpha) + blended * alpha
-    out_a = alpha + bg_a * (1 - alpha)
-
-    return np.concatenate([rgb, out_a], axis=-1)
 def array_to_img(arr: np.ndarray):
     adjusted =  np.array(np.clip(arr, 0, 1) * 255, dtype=np.uint8)
     pil_img = Image.fromarray(adjusted)
