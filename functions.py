@@ -6,12 +6,11 @@ from classblend import *
 import yaml
 from pathlib import Path
 
-# Seules les images situées dans ce dossier peuvent être chargées depuis le YAML
 DOSSIER_PROJET = Path(__file__).resolve().parent
 DOSSIER_IMAGES = DOSSIER_PROJET / "images"
 
-# Associe le nom d'un blend dans le YAML à sa classe
-BLENDS = {
+
+BLENDS = { #liste tous les blends disponibles, le nom du blend est la clé et la valeur est la classe correspondante
     "normal": NormalBlend,
     "difference": DifferenceBlend,
     "darken": DarkenBlend,
