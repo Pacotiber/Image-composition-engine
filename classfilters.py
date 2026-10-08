@@ -3,7 +3,7 @@ from classabstraite import Filter
 from scipy.ndimage import convolve
 
 TAILLE_NOYAU_MAX = 51
-SIGMA_MAX = 50.0 
+SIGMA_MAX = 50.0  #evite de sature la memoire  
 
 
 def verifier_entier(valeur, nom: str, mini: int, maxi: int) -> int:
