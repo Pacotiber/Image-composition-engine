@@ -2,6 +2,23 @@ import numpy as np
 from classabstraite import Filter
 from scipy.ndimage import convolve
 
+TAILLE_NOYAU_MAX = 51
+SIGMA_MAX = 50.0 
+
+
+def verifier_entier(valeur, nom: str, mini: int, maxi: int) -> int:
+    """Vérifie qu'un paramètre est un entier compris entre mini et maxi, sinon lève une ValueError."""
+    if isinstance(valeur, bool) or not isinstance(valeur, int) or not mini <= valeur <= maxi:
+        raise ValueError(f"Paramètre '{nom}' invalide : {valeur!r} (entier attendu entre {mini} et {maxi})")
+    return valeur
+
+
+def verifier_reel(valeur, nom: str, mini: float, maxi: float) -> float:
+    """Vérifie qu'un paramètre est un nombre fini dans ]mini, maxi], sinon lève une ValueError."""
+    if isinstance(valeur, bool) or not isinstance(valeur, (int, float)) or not mini < valeur <= maxi:
+        raise ValueError(f"Paramètre '{nom}' invalide : {valeur!r} (nombre attendu dans ]{mini}, {maxi}])")
+    return float(valeur)
+
 
 class normal(Filter):
     """Filtre neutre : renvoie l'image sans la modifier."""
@@ -14,6 +31,7 @@ class normal(Filter):
 class blur(Filter):
     """Flou moyenneur : chaque pixel devient la moyenne de son voisinage taille x taille."""
     def __init__(self, taille: int = 5):
+        taille = verifier_entier(taille, "taille", 1, TAILLE_NOYAU_MAX)
         super().__init__("blur", {"taille": taille})
 
     def apply(self, image: np.ndarray):
@@ -25,6 +43,8 @@ class blur(Filter):
 class gaussianblur(Filter):
     """Flou gaussien : les pixels proches du centre pèsent plus que les lointains (window = taille du noyau, sigma = force du flou)."""
     def __init__(self, window: int, sigma: float):
+        window = verifier_entier(window, "window", 1, TAILLE_NOYAU_MAX)
+        sigma = verifier_reel(sigma, "sigma", 0, SIGMA_MAX)
         super().__init__("gaussianblur", {"window": window, "sigma": sigma})
 
     def apply(self, image: np.ndarray):
@@ -63,17 +83,22 @@ class Sepia(Filter):
             [0.349, 0.686, 0.168],
             [0.272, 0.534, 0.131],
         ])
-        new = image @ matrice.T
-        return np.clip(new, 0, 1)
+        new = image.copy()
+        new[..., :3] = np.clip(image[..., :3] @ matrice.T, 0, 1)  # la matrice ne s'applique qu'à R, G, B (alpha conservé)
+        return new
 
 
 class blackborder(Filter):
     """Cadre noir : met à 0 une bordure de border_size pixels sur les quatre côtés."""
     def __init__(self, border_size: int):
+        border_size = verifier_entier(border_size, "border_size", 0, 100000)
         super().__init__("blackborder", {"border_size": border_size})
 
     def apply(self, image: np.ndarray):
         epaisseur = self.parameters["border_size"]
+        image = image.copy()  
+        if epaisseur == 0:    
+            return image
         image[:epaisseur, :, :] = 0
         image[-epaisseur:, :, :] = 0
         image[:, :epaisseur, :] = 0

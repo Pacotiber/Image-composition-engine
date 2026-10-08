@@ -1,6 +1,8 @@
 from classabstraite import *
 import numpy as np
 
+EPS = 1e-6
+
 
 class NormalBlend(Blend):
     """Normal : le calque recouvre le fond (seule l'image du calque est conservée)."""
@@ -21,7 +23,7 @@ class MultiplyBlend(Blend):
 class ColorBurnBlend(Blend):
     """Densité couleur + : assombrit le fond en augmentant le contraste selon le calque."""
     def apply(self,background,image,opacity):
-        return 1-(1-background)/(image*opacity)
+        return 1-(1-background)/np.maximum(image*opacity,EPS)
 class LinearBurn(Blend):
     """Densité linéaire + : additionne fond et calque puis retire 1, ce qui assombrit."""
     def apply(self,background,image,opacity):
@@ -37,7 +39,7 @@ class ScreenBlend(Blend):
 class ColorDodgeBlend(Blend):
     """Densité couleur - : éclaircit le fond en augmentant le contraste selon le calque."""
     def apply(self,background,image,opacity):
-        return background/(1-image*opacity)
+        return background/np.maximum(1-image*opacity,EPS)
 class LinearDodgeBlend(Blend):
     """Densité linéaire - (Add) : additionne simplement fond et calque."""
     def apply(self,background,image,opacity):
@@ -57,7 +59,7 @@ class HardLightBlend(Blend):
 class VividLightBlend(Blend):
     """Lumière vive : Densité couleur + ou - selon le calque, effet très contrasté."""
     def apply(self,background,image,opacity):
-        return np.where(image*opacity<0.5,1-(1-background)/(2*image*opacity),background/(2*(1-image*opacity)))
+        return np.where(image*opacity<0.5,1-(1-background)/np.maximum(2*image*opacity,EPS),background/np.maximum(2*(1-image*opacity),EPS))
 class LinearLightBlend(Blend):
     """Lumière linéaire : Densité linéaire + ou - selon le calque."""
     def apply(self,background,image,opacity):
@@ -65,7 +67,7 @@ class LinearLightBlend(Blend):
 class PinLightBlend(Blend):
     """Lumière ponctuelle : remplace les pixels par le plus sombre ou le plus clair selon le calque."""
     def apply(self,background,image,opacity):
-        return np.where(image*opacity<0.5,np.min(background,2*image*opacity),np.max(background,2*(image*opacity-0.5)))
+        return np.where(image*opacity<0.5,np.minimum(background,2*image*opacity),np.maximum(background,2*(image*opacity-0.5)))
 class ExclusionBlend(Blend):
     """Exclusion : proche de Différence mais avec un contraste plus faible."""
     def apply(self,background,image,opacity):

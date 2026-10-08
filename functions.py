@@ -4,6 +4,11 @@ from classabstraite import *
 from classfilters import *
 from classblend import *
 import yaml
+from pathlib import Path
+
+# Seules les images situées dans ce dossier peuvent être chargées depuis le YAML
+DOSSIER_PROJET = Path(__file__).resolve().parent
+DOSSIER_IMAGES = DOSSIER_PROJET / "images"
 
 # Associe le nom d'un blend dans le YAML à sa classe
 BLENDS = {
@@ -40,6 +45,21 @@ def array_from_file_rgba(path: str) -> np.ndarray:
     """Charge une image en RGBA et la renvoie en tableau (h, l, 4) de valeurs dans [0, 1]."""
     img = Image.open(path).convert("RGBA")
     return np.array(img) / 255
+
+def chemin_image_securise(path: str) -> Path:
+    """Vérifie que le chemin d'image du YAML est relatif et reste dans le dossier images/.
+    Refuse les chemins absolus, réseau (\\\\serveur) et les sorties via '..' ou lien symbolique."""
+    if not isinstance(path, str) or not path.strip():
+        raise ValueError(f"Chemin d'image invalide : {path!r}")
+    relatif = Path(path.strip().replace("\\", "/"))
+    if relatif.is_absolute() or relatif.drive or relatif.anchor:
+        raise ValueError(f"Chemin d'image refusé (absolu) : '{path}'")
+    chemin = (DOSSIER_PROJET / relatif).resolve()
+    if not chemin.is_relative_to(DOSSIER_IMAGES):
+        raise ValueError(f"Chemin d'image refusé (hors du dossier images/) : '{path}'")
+    if not chemin.is_file():
+        raise ValueError(f"Image introuvable : '{path}'")
+    return chemin
 
 def readfromyaml(path:str) ->dict:
     """Lit le fichier YAML (en UTF-8) et le renvoie sous forme de dictionnaire."""
