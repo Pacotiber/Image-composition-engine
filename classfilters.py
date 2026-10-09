@@ -15,7 +15,7 @@ def verifier_entier(valeur, nom: str, mini: int, maxi: int) -> int:
 
 def verifier_reel(valeur, nom: str, mini: float, maxi: float) -> float:
     """Vérifie qu'un paramètre est un nombre fini dans ]mini, maxi], sinon lève une ValueError."""
-    if isinstance(valeur, bool) or not isinstance(valeur, (int, float)) or not mini < valeur <= maxi:
+    if isinstance(valeur,bool) or not isinstance(valeur, (int,float)) or not mini < valeur <= maxi:
         raise ValueError(f"Paramètre '{nom}' invalide : {valeur!r} (nombre attendu dans ]{mini}, {maxi}])")
     return float(valeur)
 
@@ -31,7 +31,7 @@ class normal(Filter):
 class blur(Filter):
     """Flou moyenneur : chaque pixel devient la moyenne de son voisinage taille x taille."""
     def __init__(self, taille: int = 5):
-        taille = verifier_entier(taille, "taille", 1, TAILLE_NOYAU_MAX)
+        taille = verifier_entier(taille, "taille", 1,TAILLE_NOYAU_MAX)
         super().__init__("blur", {"taille": taille})
 
     def apply(self, image: np.ndarray):
@@ -50,9 +50,9 @@ class gaussianblur(Filter):
     def apply(self, image: np.ndarray):
         window = self.parameters["window"]
         sigma = self.parameters["sigma"]
-        ax = np.arange(window) - (window - 1) / 2
-        xx, yy = np.meshgrid(ax, ax)
-        noyau = np.exp(-(xx**2 + yy**2) / (2 * sigma**2))
+        ax= np.arange(window) - (window - 1) / 2
+        xx, yy= np.meshgrid(ax, ax)
+        noyau= np.exp(-(xx**2 + yy**2) / (2 * sigma**2))
         noyau /= noyau.sum()
         return convolve(image, noyau[:, :, None], mode="nearest")
 
@@ -66,7 +66,7 @@ class Grayscale(Filter):
         R, G, B = image[:, :, 0], image[:, :, 1], image[:, :, 2]
         gray = 0.299 * R + 0.587 * G + 0.114 * B
         new = image.copy()
-        new[:, :, 0] = gray
+        new[:, :, 0]= gray
         new[:, :, 1] = gray
         new[:, :, 2] = gray
         return new
@@ -83,8 +83,8 @@ class Sepia(Filter):
             [0.349, 0.686, 0.168],
             [0.272, 0.534, 0.131],
         ])
-        new = image.copy()
-        new[..., :3] = np.clip(image[..., :3] @ matrice.T, 0, 1)  # la matrice ne s'applique qu'à R, G, B (alpha conservé)
+        new= image.copy()
+        new[..., :3]= np.clip(image[..., :3] @ matrice.T, 0, 1)  # la matrice ne s'applique qu'à R, G, B (alpha conservé)
         return new
 
 
@@ -97,10 +97,10 @@ class blackborder(Filter):
     def apply(self, image: np.ndarray):
         epaisseur = self.parameters["border_size"]
         image = image.copy()  
-        if epaisseur == 0:    
+        if epaisseur== 0:    
             return image
-        image[:epaisseur, :, :] = 0
-        image[-epaisseur:, :, :] = 0
-        image[:, :epaisseur, :] = 0
-        image[:, -epaisseur:, :] = 0
+        image[:epaisseur,:,:] =0
+        image[-epaisseur:,:, :]= 0
+        image[:,:epaisseur, :] = 0
+        image[:, -epaisseur:, :]= 0
         return image

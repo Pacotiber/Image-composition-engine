@@ -1,7 +1,8 @@
 from classabstraite import *
 import numpy as np
 
-EPS = 1e-6
+EPS = 1e-6 #pour eviter les divisions pas zéro
+
 
 
 class NormalBlend(Blend):

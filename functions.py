@@ -119,7 +119,7 @@ def apply_blend(background: np.ndarray, image: np.ndarray, blend: dict | None = 
     name = blend.get("name","normal")
     opacity =float(blend.get("opacity",1.0))
     mode= getblendingmode(name)
-    bg_rgb = background[..., :3]
+    bg_rgb = background[...,:3]
     bg_a = background[..., 3:4]
     im_rgb= image[..., :3]
     if(len(bg_rgb)!=len(im_rgb)):
@@ -133,11 +133,11 @@ def apply_blend(background: np.ndarray, image: np.ndarray, blend: dict | None = 
 
 def array_to_img(arr: np.ndarray):
     """Convertit un tableau de valeurs dans [0, 1] en image PIL (entiers 0-255)."""
-    adjusted =  np.array(np.clip(arr, 0, 1) * 255, dtype=np.uint8)
-    pil_img = Image.fromarray(adjusted)
+    adjusted =np.array(np.clip(arr, 0, 1) * 255, dtype=np.uint8)
+    pil_img =Image.fromarray(adjusted)
     return pil_img
 
 def show_from_array(arr: np.ndarray):
     """Convertit un tableau en image et l'ouvre dans le visionneur par défaut."""
-    img = array_to_img(arr)
+    img =array_to_img(arr)
     img.show()

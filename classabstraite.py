@@ -16,7 +16,7 @@ class Filter:
         self.name=name
         self.parameters=parameters
     @abstractmethod
-    def apply(self, image: np.ndarray):
+    def apply(self,image: np.ndarray):
         pass
 class Blend:
     @abstractmethod
